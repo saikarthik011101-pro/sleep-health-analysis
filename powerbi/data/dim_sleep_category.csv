@@ -1,0 +1,4 @@
+sleep_category,sort_order
+Short (<6h),1
+Healthy (6 to <8h),2
+Long (8h+),3
