@@ -2,7 +2,7 @@
 
 What goes with better sleep, and with sleep disorders? An end-to-end analysis of 374 people: data cleaning, exploratory analysis, statistical testing, a prediction model, lifestyle profiles, and an interactive dashboard.
 
-**Notebook:** <add your Colab or GitHub link>  |  **Dashboard walkthrough:** <add your video link>
+**Notebook:** (https://github.com/saikarthik011101-pro/sleep-health-analysis)  |
 
 ## Headline findings
 1. **Stress is the factor most tied to sleep quality.** Spearman correlation of -0.90 on the 132 distinct records (sleep duration 0.88, resting heart rate -0.74).
@@ -21,8 +21,7 @@ What goes with better sleep, and with sleep disorders? An end-to-end analysis of
 | 2 | Exploratory analysis | 9 charts, each answering one business question |
 | 3 | Statistical testing | Spearman, Mann-Whitney, Kruskal-Wallis, chi-square, regression; Holm correction for 18 tests; every test run on all rows and on distinct records |
 | 4 | Prediction and profiles | Logistic regression, decision tree, random forest vs baselines with grouped cross-validation; K-Means profiles on distinct records |
-| 5 | Dashboard | Streamlit app with filters, an option to count each distinct record once, and CSV download |
-
+| 5 | SQL and Power BI | SQL (DuckDB) cleaning, a star-schema data model and 13 business questions using CTEs, window functions and FILTER; a 4-page Power BI dashboard with DAX measures |
 ## Read this first: data limitations
 - **Most rows are repeats.** Only 132 of 374 records are distinct, and the dataset looks synthetic. So every statistical test was repeated on distinct records, and the model was tested with grouped cross-validation so a record's copies never sit in both training and test data.
 - **Small groups.** Managers (1), scientists (4) and software engineers (4) are too small for occupation tests, and the obese BMI group has 10 people.
@@ -31,22 +30,27 @@ What goes with better sleep, and with sleep disorders? An end-to-end analysis of
 - **Not medical advice.** This is a portfolio analysis of a small, likely synthetic dataset.
 
 ## Run it
-**Notebook (Colab):** upload `sleep_analysis.ipynb`, choose Runtime > Run all, and upload the original dataset CSV when asked.
+**Notebook (Colab):** upload `sleep_analysis.ipynb`, choose Runtime > Run all, and upload the original dataset CSV when asked. Section 9 runs the SQL in `sql/` and exports the tables for Power BI.
 
-**Dashboard (local):**
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
+**Dashboard:** open `powerbi/Sleep_Health_Dashboard.pbix` in Power BI Desktop (Windows). The data is embedded.
+
+## SQL highlights
+- `sql/01_clean_and_model.sql`: cleans the raw data (label fixes, blood pressure split, repeated-record flag), builds a fact table and nine lookup tables.
+- `sql/02_business_questions.sql`: 13 queries using CTEs, `RANK`, `LAG`, `SUM() OVER (PARTITION BY ...)`, `FILTER` and `HAVING`.
+- The SQL results are reconciled against the pandas results in the notebook.
+
+## Dashboard
+Four pages: Home,Overview, Drivers, Who is at risk,.
+![Screenshots](powerbi/screenshots/)
 
 ## Repo contents
-- `sleep_analysis.ipynb`: the full analysis
-- `app.py`: Streamlit dashboard (reads `sleep_clean.csv`)
-- `sleep_clean.csv`: cleaned data produced by the notebook
+- `sleep_analysis.ipynb`: the full analysis, including the SQL section
+- `sql/`: the two SQL scripts
+- `powerbi/`: the `.pbix` file, theme, exported CSVs and screenshots
 - `charts/`: charts saved by the notebook
 
 ## Tech
-Python, pandas, NumPy, SciPy, statsmodels, scikit-learn, Matplotlib, Plotly, Streamlit.
+Python, pandas, SciPy, statsmodels, scikit-learn, Matplotlib, SQL (DuckDB), Power BI (DAX).
 
 ## Data source
-Sleep Health and Lifestyle dataset from Kaggle. <add the exact link and check the licence before committing the CSV>
+Sleep Health and Lifestyle dataset from Kaggle.
